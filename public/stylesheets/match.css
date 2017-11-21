@@ -1,0 +1,35 @@
+#attack {
+    margin-top: 20px;
+    margin-left: 54px;
+    width: 710px;
+    height: 40px;
+}
+#info {
+    margin-top: 60px;
+    height: 500px;
+    width: 300px;
+    float: right;
+    display: inline;
+    background: #eee;
+    border: solid;
+}
+.sure {
+    width: 100%;
+    height: 40px;
+    float: right;
+    display: none;
+}
+
+#txt{
+    height: 300px;
+    padding: 5%;
+    width: 90%;
+    font-size: 18px;
+}
+.btn_direction {
+    height:40px;
+    width: 25%;
+}
+#direction {
+    display: none;
+}

@@ -1,0 +1,70 @@
+.block {
+    height: 50px;
+    width: 30px;
+    border: solid;
+    padding-left: 20px;
+    font-size: 20px;
+}
+.block_self {
+    height: 50px;
+    width: 30px;
+    border: solid;
+    padding-left: 20px;
+    font-size: 20px;
+}
+.number {
+    height: 50px;
+    width: 30px;
+    padding-left: 20px;
+    font-size: 20px;
+}
+.character {
+    height: 50px;
+    width: 30px;
+    padding-left: 20px;
+    font-size: 20px;
+}
+.active1{
+    background: url("../images/hit.png");
+    background-size:100% 100%;
+    background-repeat:no-repeat;
+}
+.active2{
+    background: url("../images/head.png");
+    background-size:100% 100%;
+    background-repeat:no-repeat;
+}
+.active3{
+    background: url("../images/question.png");
+    background-size:100% 100%;
+    background-repeat:no-repeat;
+}
+.active4{
+    background: url("../images/flash.png");
+    background-size:100% 100%;
+    background-repeat:no-repeat;
+}
+.activeYes {
+    background: red;
+}
+#clearMode {
+    margin-top: 20px;
+    margin-left: 70px;
+    width: 300px;
+    height: 60px;
+    border: solid;
+    background: #eee;
+    padding: 0;
+}
+#clearYes {
+    width: 39%;
+    height: 50%;
+    float: left;
+    padding: 5%;
+}
+#clearNo {
+    width: 39%;
+    height: 50%;
+    float: right;
+    padding: 5%;
+}
