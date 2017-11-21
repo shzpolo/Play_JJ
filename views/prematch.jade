@@ -1,0 +1,16 @@
+//
+   Created by shzpo_000 on 2017/11/20.
+extends layout
+
+block content
+    link(rel='stylesheet', href='/stylesheets/prematch.css')
+    h1 Hello, Player #{player}
+    h2 Your Number Is Under This Line.
+    h2#num #{player}
+
+    p Please enter you enemy's number.
+    input#enemy(type="text")
+    a#matchButton
+        button.matchButton Match
+    script(src = "/javascripts/prematch.js")
+

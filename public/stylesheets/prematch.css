@@ -1,0 +1,9 @@
+#enemy {
+    height: 30px;
+    width: 300px;
+}
+.matchButton {
+    height: 30px;
+    width: 50px;
+    margin: 10px;
+}

@@ -10,7 +10,6 @@ var block_head = null;
 var block_mid_1 = null;
 var block_mid_2 = null;
 var block_mid_3 = null;
-var block_mid_4 = null;
 var block_wing_1 = null;
 var block_wing_2 = null;
 var block_wing_3 = null;
@@ -19,6 +18,21 @@ var block_tail_1 = null;
 var block_tail_2 = null;
 var cancel = false;
 var waiting_direction = false;
+
+var player = parseInt($('#title_your').text().substr(18));
+var enemy = parseInt($('#title_enemy').text().substr(35));
+var initData = {
+    player : player,
+    head : [],
+    body : []
+};
+var atkData = {
+    player: player,
+    enemy: enemy,
+    hit_col: 0,
+    hit_row: 0
+};
+var canAtk = player > enemy;
 
 $("#selfField .block_self").each(function() {
     var block = $(this);
@@ -80,15 +94,6 @@ $('#left').click(function() {
                     block_mid_3 = block;
                 }
             }
-            else if(block.attr('row') == plane_row && block.attr('col') == plane_col-4) {
-                if(block.attr('chosen') == "yes") {
-                    $("#txt").text("You cannot choose this direction");
-                    cancel = true;
-                }
-                else {
-                    block_mid_4 = block;
-                }
-            }
             else if(block.attr('row') == plane_row-2 && block.attr('col') == plane_col-1) {
                 if(block.attr('chosen') == "yes") {
                     $("#txt").text("You cannot choose this direction");
@@ -125,7 +130,7 @@ $('#left').click(function() {
                     block_wing_4 = block;
                 }
             }
-            else if(block.attr('row') == plane_row-1 && block.attr('col') == plane_col-4) {
+            else if(block.attr('row') == plane_row-1 && block.attr('col') == plane_col-3) {
                 if(block.attr('chosen') == "yes") {
                     $("#txt").text("You cannot choose this direction");
                     cancel = true;
@@ -134,7 +139,7 @@ $('#left').click(function() {
                     block_tail_1 = block;
                 }
             }
-            else if(parseInt(block.attr('row')) === parseInt(plane_row)+1 && block.attr('col') == plane_col-4) {
+            else if(parseInt(block.attr('row')) === parseInt(plane_row)+1 && block.attr('col') == plane_col-3) {
                 if(block.attr('chosen') == "yes") {
                     $("#txt").text("You cannot choose this direction");
                     cancel = true;
@@ -149,7 +154,6 @@ $('#left').click(function() {
             block_mid_1.addClass('active1');
             block_mid_2.addClass('active1');
             block_mid_3.addClass('active1');
-            block_mid_4.addClass('active1');
             block_wing_1.addClass('active1');
             block_wing_2.addClass('active1');
             block_wing_3.addClass('active1');
@@ -165,7 +169,6 @@ $('#left').click(function() {
                 block_mid_1.removeClass('active1');
                 block_mid_2.removeClass('active1');
                 block_mid_3.removeClass('active1');
-                block_mid_4.removeClass('active1');
                 block_wing_1.removeClass('active1');
                 block_wing_2.removeClass('active1');
                 block_wing_3.removeClass('active1');
@@ -180,7 +183,6 @@ $('#left').click(function() {
                 block_mid_1 = null;
                 block_mid_2 = null;
                 block_mid_3 = null;
-                block_mid_4 = null;
                 block_wing_1 = null;
                 block_wing_2 = null;
                 block_wing_3 = null;
@@ -195,7 +197,6 @@ $('#left').click(function() {
                 block_mid_1.attr('chosen', 'yes');
                 block_mid_2.attr('chosen', 'yes');
                 block_mid_3.attr('chosen', 'yes');
-                block_mid_4.attr('chosen', 'yes');
                 block_wing_1.attr('chosen', 'yes');
                 block_wing_2.attr('chosen', 'yes');
                 block_wing_3.attr('chosen', 'yes');
@@ -203,6 +204,49 @@ $('#left').click(function() {
                 block_tail_1.attr('chosen', 'yes');
                 block_tail_2.attr('chosen', 'yes');
                 block_head.attr('chosen', 'yes');
+
+                data['head'].push({
+                    row : block_head.attr('row'),
+                    col : block_head.attr('col')
+                });
+                data['body'].push({
+                    row : block_mid_1.attr('row'),
+                    col : block_mid_1.attr('col')
+                });
+                data['body'].push({
+                    row : block_mid_2.attr('row'),
+                    col : block_mid_2.attr('col')
+                });
+                data['body'].push({
+                    row : block_mid_3.attr('row'),
+                    col : block_mid_3.attr('col')
+                });
+                data['body'].push({
+                    row : block_wing_1.attr('row'),
+                    col : block_wing_1.attr('row')
+                });
+                data['body'].push({
+                    row : block_wing_2.attr('row'),
+                    col : block_wing_2.attr('col')
+                });
+                data['body'].push({
+                    row : block_wing_3.attr('row'),
+                    col : block_wing_3.attr('col')
+                });
+                data['body'].push({
+                    row : block_wing_4.attr('row'),
+                    col : block_wing_4.attr('col')
+                });
+                data['body'].push({
+                    row : block_tail_1.attr('row'),
+                    col : block_tail_1.attr('col')
+                });
+                data['body'].push({
+                    row : block_tail_2.attr('row'),
+                    col : block_tail_2.attr('col')
+                });
+                if(plane_num === 0)
+                    sendInit();
             });
         }
     }
@@ -254,15 +298,6 @@ $('#right').click(function() {
                     block_mid_3 = block;
                 }
             }
-            else if (block.attr('row') == plane_row && parseInt(block.attr('col')) === parseInt(plane_col) + 4) {
-                if (block.attr('chosen') == "yes") {
-                    $("#txt").text("You cannot choose this direction");
-                    cancel = true;
-                }
-                else {
-                    block_mid_4 = block;
-                }
-            }
             else if (block.attr('row') == plane_row - 2 && parseInt(block.attr('col')) === parseInt(plane_col) + 1) {
                 if (block.attr('chosen') == "yes") {
                     $("#txt").text("You cannot choose this direction");
@@ -299,7 +334,7 @@ $('#right').click(function() {
                     block_wing_4 = block;
                 }
             }
-            else if (block.attr('row') == plane_row - 1 && parseInt(block.attr('col')) === parseInt(plane_col) + 4) {
+            else if (block.attr('row') == plane_row - 1 && parseInt(block.attr('col')) === parseInt(plane_col) + 43) {
                 if (block.attr('chosen') == "yes") {
                     $("#txt").text("You cannot choose this direction");
                     cancel = true;
@@ -308,7 +343,7 @@ $('#right').click(function() {
                     block_tail_1 = block;
                 }
             }
-            else if (parseInt(block.attr('row')) === parseInt(plane_row) + 1 && parseInt(block.attr('col')) === parseInt(plane_col) + 4) {
+            else if (parseInt(block.attr('row')) === parseInt(plane_row) + 1 && parseInt(block.attr('col')) === parseInt(plane_col) + 3) {
                 if (block.attr('chosen') == "yes") {
                     $("#txt").text("You cannot choose this direction");
                     cancel = true;
@@ -323,7 +358,6 @@ $('#right').click(function() {
             block_mid_1.addClass('active1');
             block_mid_2.addClass('active1');
             block_mid_3.addClass('active1');
-            block_mid_4.addClass('active1');
             block_wing_1.addClass('active1');
             block_wing_2.addClass('active1');
             block_wing_3.addClass('active1');
@@ -339,7 +373,6 @@ $('#right').click(function() {
                 block_mid_1.removeClass('active1');
                 block_mid_2.removeClass('active1');
                 block_mid_3.removeClass('active1');
-                block_mid_4.removeClass('active1');
                 block_wing_1.removeClass('active1');
                 block_wing_2.removeClass('active1');
                 block_wing_3.removeClass('active1');
@@ -354,7 +387,6 @@ $('#right').click(function() {
                 block_mid_1 = null;
                 block_mid_2 = null;
                 block_mid_3 = null;
-                block_mid_4 = null;
                 block_wing_1 = null;
                 block_wing_2 = null;
                 block_wing_3 = null;
@@ -365,11 +397,10 @@ $('#right').click(function() {
             });
             yes.click(function () {
                 waiting_direction = false;
-                plane_num--;
+                plane_num --;
                 block_mid_1.attr('chosen', 'yes');
                 block_mid_2.attr('chosen', 'yes');
                 block_mid_3.attr('chosen', 'yes');
-                block_mid_4.attr('chosen', 'yes');
                 block_wing_1.attr('chosen', 'yes');
                 block_wing_2.attr('chosen', 'yes');
                 block_wing_3.attr('chosen', 'yes');
@@ -377,6 +408,49 @@ $('#right').click(function() {
                 block_tail_1.attr('chosen', 'yes');
                 block_tail_2.attr('chosen', 'yes');
                 block_head.attr('chosen', 'yes');
+
+                data['head'].push({
+                    row : block_head.attr('row'),
+                    col : block_head.attr('col')
+                });
+                data['body'].push({
+                    row : block_mid_1.attr('row'),
+                    col : block_mid_1.attr('col')
+                });
+                data['body'].push({
+                    row : block_mid_2.attr('row'),
+                    col : block_mid_2.attr('col')
+                });
+                data['body'].push({
+                    row : block_mid_3.attr('row'),
+                    col : block_mid_3.attr('col')
+                });
+                data['body'].push({
+                    row : block_wing_1.attr('row'),
+                    col : block_wing_1.attr('row')
+                });
+                data['body'].push({
+                    row : block_wing_2.attr('row'),
+                    col : block_wing_2.attr('col')
+                });
+                data['body'].push({
+                    row : block_wing_3.attr('row'),
+                    col : block_wing_3.attr('col')
+                });
+                data['body'].push({
+                    row : block_wing_4.attr('row'),
+                    col : block_wing_4.attr('col')
+                });
+                data['body'].push({
+                    row : block_tail_1.attr('row'),
+                    col : block_tail_1.attr('col')
+                });
+                data['body'].push({
+                    row : block_tail_2.attr('row'),
+                    col : block_tail_2.attr('col')
+                });
+                if(plane_num === 0)
+                    sendInit();
             });
         }
     }
@@ -428,15 +502,6 @@ $('#up').click(function() {
                     block_mid_3 = block;
                 }
             }
-            else if (parseInt(block.attr('row')) === parseInt(plane_row) - 4 && parseInt(block.attr('col')) === parseInt(plane_col)) {
-                if (block.attr('chosen') == "yes") {
-                    $("#txt").text("You cannot choose this direction");
-                    cancel = true;
-                }
-                else {
-                    block_mid_4 = block;
-                }
-            }
             else if (parseInt(block.attr('row')) === parseInt(plane_row) - 1 && parseInt(block.attr('col')) === parseInt(plane_col) - 2) {
                 if (block.attr('chosen') == "yes") {
                     $("#txt").text("You cannot choose this direction");
@@ -473,7 +538,7 @@ $('#up').click(function() {
                     block_wing_4 = block;
                 }
             }
-            else if (parseInt(block.attr('row')) === parseInt(plane_row) - 4 && parseInt(block.attr('col')) === parseInt(plane_col) - 1) {
+            else if (parseInt(block.attr('row')) === parseInt(plane_row) - 3 && parseInt(block.attr('col')) === parseInt(plane_col) - 1) {
                 if (block.attr('chosen') == "yes") {
                     $("#txt").text("You cannot choose this direction");
                     cancel = true;
@@ -482,7 +547,7 @@ $('#up').click(function() {
                     block_tail_1 = block;
                 }
             }
-            else if (parseInt(block.attr('row')) === parseInt(plane_row) - 4 && parseInt(block.attr('col')) === parseInt(plane_col) + 1) {
+            else if (parseInt(block.attr('row')) === parseInt(plane_row) - 3 && parseInt(block.attr('col')) === parseInt(plane_col) + 1) {
                 if (block.attr('chosen') == "yes") {
                     $("#txt").text("You cannot choose this direction");
                     cancel = true;
@@ -497,7 +562,6 @@ $('#up').click(function() {
             block_mid_1.addClass('active1');
             block_mid_2.addClass('active1');
             block_mid_3.addClass('active1');
-            block_mid_4.addClass('active1');
             block_wing_1.addClass('active1');
             block_wing_2.addClass('active1');
             block_wing_3.addClass('active1');
@@ -513,7 +577,6 @@ $('#up').click(function() {
                 block_mid_1.removeClass('active1');
                 block_mid_2.removeClass('active1');
                 block_mid_3.removeClass('active1');
-                block_mid_4.removeClass('active1');
                 block_wing_1.removeClass('active1');
                 block_wing_2.removeClass('active1');
                 block_wing_3.removeClass('active1');
@@ -528,7 +591,6 @@ $('#up').click(function() {
                 block_mid_1 = null;
                 block_mid_2 = null;
                 block_mid_3 = null;
-                block_mid_4 = null;
                 block_wing_1 = null;
                 block_wing_2 = null;
                 block_wing_3 = null;
@@ -543,7 +605,6 @@ $('#up').click(function() {
                 block_mid_1.attr('chosen', 'yes');
                 block_mid_2.attr('chosen', 'yes');
                 block_mid_3.attr('chosen', 'yes');
-                block_mid_4.attr('chosen', 'yes');
                 block_wing_1.attr('chosen', 'yes');
                 block_wing_2.attr('chosen', 'yes');
                 block_wing_3.attr('chosen', 'yes');
@@ -551,6 +612,49 @@ $('#up').click(function() {
                 block_tail_1.attr('chosen', 'yes');
                 block_tail_2.attr('chosen', 'yes');
                 block_head.attr('chosen', 'yes');
+
+                data['head'].push({
+                    row : block_head.attr('row'),
+                    col : block_head.attr('col')
+                });
+                data['body'].push({
+                    row : block_mid_1.attr('row'),
+                    col : block_mid_1.attr('col')
+                });
+                data['body'].push({
+                    row : block_mid_2.attr('row'),
+                    col : block_mid_2.attr('col')
+                });
+                data['body'].push({
+                    row : block_mid_3.attr('row'),
+                    col : block_mid_3.attr('col')
+                });
+                data['body'].push({
+                    row : block_wing_1.attr('row'),
+                    col : block_wing_1.attr('row')
+                });
+                data['body'].push({
+                    row : block_wing_2.attr('row'),
+                    col : block_wing_2.attr('col')
+                });
+                data['body'].push({
+                    row : block_wing_3.attr('row'),
+                    col : block_wing_3.attr('col')
+                });
+                data['body'].push({
+                    row : block_wing_4.attr('row'),
+                    col : block_wing_4.attr('col')
+                });
+                data['body'].push({
+                    row : block_tail_1.attr('row'),
+                    col : block_tail_1.attr('col')
+                });
+                data['body'].push({
+                    row : block_tail_2.attr('row'),
+                    col : block_tail_2.attr('col')
+                });
+                if(plane_num === 0)
+                    sendInit();
             });
         }
     }
@@ -602,15 +706,6 @@ $('#down').click(function() {
                     block_mid_3 = block;
                 }
             }
-            else if (parseInt(block.attr('row')) === parseInt(plane_row) + 4 && parseInt(block.attr('col')) === parseInt(plane_col)) {
-                if (block.attr('chosen') == "yes") {
-                    $("#txt").text("You cannot choose this direction");
-                    cancel = true;
-                }
-                else {
-                    block_mid_4 = block;
-                }
-            }
             else if (parseInt(block.attr('row')) === parseInt(plane_row) + 1 && parseInt(block.attr('col')) === parseInt(plane_col) - 2) {
                 if (block.attr('chosen') == "yes") {
                     $("#txt").text("You cannot choose this direction");
@@ -647,7 +742,7 @@ $('#down').click(function() {
                     block_wing_4 = block;
                 }
             }
-            else if (parseInt(block.attr('row')) === parseInt(plane_row) + 4 && parseInt(block.attr('col')) === parseInt(plane_col) - 1) {
+            else if (parseInt(block.attr('row')) === parseInt(plane_row) + 3 && parseInt(block.attr('col')) === parseInt(plane_col) - 1) {
                 if (block.attr('chosen') == "yes") {
                     $("#txt").text("You cannot choose this direction");
                     cancel = true;
@@ -656,7 +751,7 @@ $('#down').click(function() {
                     block_tail_1 = block;
                 }
             }
-            else if (parseInt(block.attr('row')) === parseInt(plane_row) + 4 && parseInt(block.attr('col')) === parseInt(plane_col) + 1) {
+            else if (parseInt(block.attr('row')) === parseInt(plane_row) + 3 && parseInt(block.attr('col')) === parseInt(plane_col) + 1) {
                 if (block.attr('chosen') == "yes") {
                     $("#txt").text("You cannot choose this direction");
                     cancel = true;
@@ -671,7 +766,6 @@ $('#down').click(function() {
             block_mid_1.addClass('active1');
             block_mid_2.addClass('active1');
             block_mid_3.addClass('active1');
-            block_mid_4.addClass('active1');
             block_wing_1.addClass('active1');
             block_wing_2.addClass('active1');
             block_wing_3.addClass('active1');
@@ -687,7 +781,6 @@ $('#down').click(function() {
                 block_mid_1.removeClass('active1');
                 block_mid_2.removeClass('active1');
                 block_mid_3.removeClass('active1');
-                block_mid_4.removeClass('active1');
                 block_wing_1.removeClass('active1');
                 block_wing_2.removeClass('active1');
                 block_wing_3.removeClass('active1');
@@ -702,7 +795,6 @@ $('#down').click(function() {
                 block_mid_1 = null;
                 block_mid_2 = null;
                 block_mid_3 = null;
-                block_mid_4 = null;
                 block_wing_1 = null;
                 block_wing_2 = null;
                 block_wing_3 = null;
@@ -717,7 +809,6 @@ $('#down').click(function() {
                 block_mid_1.attr('chosen', 'yes');
                 block_mid_2.attr('chosen', 'yes');
                 block_mid_3.attr('chosen', 'yes');
-                block_mid_4.attr('chosen', 'yes');
                 block_wing_1.attr('chosen', 'yes');
                 block_wing_2.attr('chosen', 'yes');
                 block_wing_3.attr('chosen', 'yes');
@@ -725,7 +816,61 @@ $('#down').click(function() {
                 block_tail_1.attr('chosen', 'yes');
                 block_tail_2.attr('chosen', 'yes');
                 block_head.attr('chosen', 'yes');
+
+                data['head'].push({
+                    row : block_head.attr('row'),
+                    col : block_head.attr('col')
+                });
+                data['body'].push({
+                    row : block_mid_1.attr('row'),
+                    col : block_mid_1.attr('col')
+                });
+                data['body'].push({
+                    row : block_mid_2.attr('row'),
+                    col : block_mid_2.attr('col')
+                });
+                data['body'].push({
+                    row : block_mid_3.attr('row'),
+                    col : block_mid_3.attr('col')
+                });
+                data['body'].push({
+                    row : block_wing_1.attr('row'),
+                    col : block_wing_1.attr('row')
+                });
+                data['body'].push({
+                    row : block_wing_2.attr('row'),
+                    col : block_wing_2.attr('col')
+                });
+                data['body'].push({
+                    row : block_wing_3.attr('row'),
+                    col : block_wing_3.attr('col')
+                });
+                data['body'].push({
+                    row : block_wing_4.attr('row'),
+                    col : block_wing_4.attr('col')
+                });
+                data['body'].push({
+                    row : block_tail_1.attr('row'),
+                    col : block_tail_1.attr('col')
+                });
+                data['body'].push({
+                    row : block_tail_2.attr('row'),
+                    col : block_tail_2.attr('col')
+                });
+                if(plane_num === 0)
+                    sendInit();
             });
         }
     }
 });
+
+function sendInit() {
+    $.getJSON('match/init', initData, function(result) {
+        if(result['state'] === 'OK') {
+            $("#txt").text("Your initialize success!");
+        }
+        else {
+            $("#txt").text("Your initialize failed! Please check the situation of server");
+        }
+    });
+}

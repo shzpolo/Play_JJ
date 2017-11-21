@@ -5,7 +5,7 @@ block content
     link(rel='stylesheet', href='/stylesheets/match.css')
     div#container
         div#selfField
-            h1 Your Field
+            h1#title_your Your Field Player #{player}
             div#info
                 div#txt Please choose a point as one of your plane's head
                 button#yes.sure YES
@@ -199,7 +199,7 @@ block content
                     td.block_self
                     td.block_self
         div#field1
-            h1 Offense Field
+            h1#title_enemy Offense Field Your enemy is Player #{enemy}
             table#backupTable1
                 tr.row
                     td.number

@@ -33,6 +33,14 @@ server.on('listening', onListening);
  * Normalize a port into a number, string, or false.
  */
 
+var io = require('socket.io')(server);
+
+
+/**
+ *
+ * Insert socket to open rooms for matching,
+ */
+
 function normalizePort(val) {
   var port = parseInt(val, 10);
 

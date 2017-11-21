@@ -10,8 +10,8 @@ router.get('/single', function(req, res, next) {
     res.render('single');
 });
 
-router.get('/match', function(req, res, next) {
-    res.render('match');
+router.get('/s', function(req, res, next) {
+    console.log('sssss');
 });
 
 module.exports = router;
