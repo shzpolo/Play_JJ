@@ -5,6 +5,7 @@ var express = require('express');
 var router = express.Router();
 var player = 0;
 var fieldList = [];
+var atkList = [];
 
 router.get('/', function(req, res) {
     res.render('match', {player: req.query['player'], enemy: req.query['enemy']});
@@ -24,15 +25,20 @@ router.get('/pre', function(req, res) {
 });
 
 router.get('/init', function(req, res) {
-    var player = parseInt(req.param['player']);
+    var player = parseInt(req.query['player']);
     var field = fieldList[player];
-    for(var i=0; i<req.param.head.length; i++) {
-        field[req.param['head'][i]['row']][req.param['head'][i]['col']] = 1;
+    var body = req.query['body'];
+
+    console.log(player + ' init received.');
+
+    for(var i=0; i<req.query['head'].length; i++) {
+        field[req.query['head'][i]['row']][req.query['head'][i]['col']] = 1;
     }
-    for(i=0; i<req.param.body.length; i++) {
-        field[req.param['body'][i]['row']][req.param['body'][i]['col']] = 2;
+    for(var j in body) {
+        field[body[j]['row']][body[j]['col']] = 2;
     }
-    res.send({ State: 'OK' });
+    console.log(field);
+    res.send({ state: 'OK' });
 });
 
 router.get('/atk', function(req, res) {
